@@ -1,5 +1,6 @@
 import { fetchLanguages } from "@/app/lib/data";
 import Image from 'next/image';
+import { UpdateLanguage, DeleteLanguage } from "./buttons";
 
 
 export default async function TableLanguage ({currentPage} : {
@@ -36,13 +37,14 @@ export default async function TableLanguage ({currentPage} : {
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {language.creador}
+                      {language.nivel}
                     </p>
-                    <p>{language.añoDeCreacion}</p>
+                    <p>{language.años}</p>
+                    <p>{language.experiencia}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    {/* <Updatelanguage id={language.nombre} />
-                    <Deletelanguage id={language.nombre} /> */}
+                    <UpdateLanguage id={language.id} />
+                    <DeleteLanguage id={language.id} /> 
                   </div>
                 </div>
               </div>
@@ -55,10 +57,13 @@ export default async function TableLanguage ({currentPage} : {
                 Lenguaje
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Creador
+                  Nivel
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Año creación
+                  Años 
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Experiencia 
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edición</span>
@@ -84,15 +89,18 @@ export default async function TableLanguage ({currentPage} : {
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {language.creador}
+                    {language.nivel}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {language.añoDeCreacion}
+                    {language.años}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {language.experiencia}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {/* <Updatelanguage id={language.id} />
-                      <Deletelanguage id={language.id} /> */}
+                      <UpdateLanguage id={language.id} />
+                      <DeleteLanguage id={language.id} />
                     </div>
                   </td>
                 </tr>

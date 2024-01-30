@@ -13,3 +13,4 @@ export async function fetchLanguages (currentPage: number) : Promise<LenguajeDeP
 export async function getLanguagesTotalPages () : Promise<number> {  
   return Math.floor(list_lenguages.length / ITEMS_PER_PAGE) + 1 
 }
+
