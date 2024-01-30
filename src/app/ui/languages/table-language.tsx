@@ -3,12 +3,13 @@ import Image from 'next/image';
 import { UpdateLanguage, DeleteLanguage } from "./buttons";
 
 
-export default async function TableLanguage ({currentPage} : {
-  currentPage: number
+export default async function TableLanguage ({currentPage, query} : {
+  currentPage: number, 
+  query: string, 
 }) {
 
 
-  const languages = await fetchLanguages(currentPage);
+  const languages = await fetchLanguages(currentPage, query);
 
   return (
     <div className="mt-6 flow-root">
