@@ -198,7 +198,7 @@ export default function Form () {
         {/* Logo url */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Nombre del lenguaje 
+            Logotipo del lenguaje 
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
