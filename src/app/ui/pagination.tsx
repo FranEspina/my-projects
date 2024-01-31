@@ -78,7 +78,7 @@ function PaginationNumber({
     {
       'rounded-l-md': position === 'first' || position === 'single',
       'rounded-r-md': position === 'last' || position === 'single',
-      'z-10 bg-sky-700 border-sky-700': isActive,
+      'z-10 bg-sky-700': isActive,
       'hover:bg-sky-950': !isActive && position !== 'middle',
       'text-gray-300': position === 'middle',
     },

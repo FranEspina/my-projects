@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image';
 import Link from "next/link";
 import { Button } from "../button";
 import {
@@ -8,14 +9,17 @@ import {
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { LanguageState, createLanguage } from "@/app/lib/actions";
+import { LanguageState, updateLanguage } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
+import { LanguagesTable } from "@/app/lib/definitions";
 
 
-export default function Form () {
+export default function Form ({language} : {language: LanguagesTable}) {
+  
   const initialState: LanguageState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createLanguage, initialState)
- 
+  const action = updateLanguage.bind(null, language.id)
+  const [state, dispatch] = useFormState(action, initialState)
+
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-900 p-4 md:p-6 flex flex-col gap-4">
@@ -32,6 +36,7 @@ export default function Form () {
                 name="name"
                 type="text"
                 placeholder="nombre del lenguaje"
+                defaultValue={language.name}
                 aria-describedby="name-error"
                 className="peer block w-full rounded-md border bg-gray-900 border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -61,6 +66,7 @@ export default function Form () {
                   name="level"
                   type="radio"
                   value="junior"
+                  defaultChecked={language.experience_level === 'junior'}
                   aria-describedby="level-error"
                   className="h-4 w-4 cursor-pointer border-gray-300  bg-gray-800 text-gray-600 focus:ring-2"
                 />
@@ -77,6 +83,7 @@ export default function Form () {
                   name="level"
                   type="radio"
                   value="intermedio"
+                  defaultChecked={language.experience_level === 'intermedio'}
                   aria-describedby="level-error"
                   className="h-4 w-4 cursor-pointer border-gray-700 bg-gray-800 text-gray-600 focus:ring-2"
                 />
@@ -93,6 +100,7 @@ export default function Form () {
                   name="level"
                   type="radio"
                   value="senior"
+                  defaultChecked={language.experience_level === 'senior'}
                   aria-describedby="level-error"
                   className="h-4 w-4 cursor-pointer border-gray-700 bg-gray-800 text-gray-600 focus:ring-2"
                 />
@@ -128,6 +136,7 @@ export default function Form () {
                   name="type"
                   type="radio"
                   value="profesional"
+                  defaultChecked={language.experience_type === 'profesional'}
                   aria-describedby="type-error"
                   className="h-4 w-4 cursor-pointer border-gray-700 bg-gray-700 text-gray-100 focus:ring-2"
                 />
@@ -144,6 +153,7 @@ export default function Form () {
                   name="type"
                   type="radio"
                   value="hobby"
+                  defaultChecked={language.experience_type === 'hobby'}
                   aria-describedby="type-error"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
@@ -179,6 +189,7 @@ export default function Form () {
                 type="number"
                 step="1"
                 placeholder="años"
+                defaultValue={language.experience_years}
                 aria-describedby="years-error"
                 className="peer block w-full rounded-md border bg-gray-900 border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -198,16 +209,24 @@ export default function Form () {
         {/* Logo url */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Nombre del lenguaje 
+            Logotipo del lenguaje 
           </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
+          <div className="relative mt-2 rounded-md flex flex-row items-center gap-3">
+              <Image
+                        src={language.image_url}
+                        className="rounded-md p-1 "
+                        width={50}
+                        height={50}
+                        alt={`${language.name}'s profile picture`}
+                      />
+            <div className="relative flex-1">
               <input
                 id="image_url"
                 name="image_url"
                 type="text"
                 placeholder="http://..."
                 aria-describedby="url-error"
+                defaultValue={language.image_url}
                 className="peer block w-full rounded-md border bg-gray-900 border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-100" />
@@ -239,7 +258,7 @@ export default function Form () {
         >
           Cancelar
         </Link>
-        <Button type="submit">Crear experiencia</Button>
+        <Button type="submit">Actualizar experiencia</Button>
       </div>
     </form>
   );

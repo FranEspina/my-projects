@@ -86,3 +86,62 @@ export async function createLanguage({name, level, type, years, image_url}
   }
 }
 
+export async function updateLanguage({id, name, level, type, years, image_url}
+  : {
+    id: string, 
+    name: string, 
+    level: string, 
+    type: string, 
+    years: number, 
+    image_url: string
+    }
+  ){
+
+  try {
+    await sql`
+    UPDATE languages 
+    SET name = ${name}, 
+        experience_level = ${level}, 
+        experience_type = ${type}, 
+        experience_years = ${years}, 
+        image_url = ${image_url}
+    WHERE id = ${id}
+    `
+    
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Error actualizando lenguaje de programación.');
+  }
+}
+
+export async function deleteLanguage(id: string){
+
+  try {
+    await sql`DELETE FROM languages WHERE id = ${id}`
+    
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Error borrando lenguaje de programación.');
+  }
+}
+
+export async function fetchLanguageById(id: string){
+  try {
+    const languages = await sql<LanguagesTable>`
+    SELECT
+      id,
+      name,
+      experience_level, 
+      experience_years, 
+      experience_type, 
+      image_url
+    FROM languages 
+    WHERE id = ${id}`
+    
+    return languages.rows[0]
+
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Error recuperando lenguaje por id.');
+  }
+}

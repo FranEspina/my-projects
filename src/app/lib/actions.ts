@@ -1,14 +1,15 @@
 'use server'
 
 import { z } from 'zod'
-import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { LanguagesTable } from './definitions';
-import { createLanguage as createLanguageService } from './data'
+import { createLanguage as createLanguageService, 
+         deleteLanguage as deleteLanguageService, 
+         updateLanguage as updateLanguageService  
+       } from './data'
 
 // This is temporary until @types/react-dom is updated
-export type State = {
+export type LanguageState = {
   errors?: {
     name?: string[];
     experience_level?: string[];
@@ -33,9 +34,9 @@ const LanguageSchema = z.object({
   experience_type: z.enum(['profesional', 'hobby'], {
     invalid_type_error: 'Por favor, indica tipo experiencia.'
   }), 
-  image_url: z.string({
-    invalid_type_error: 'Indica una url para el logo.', 
-  })
+  image_url: z.string().url(({
+    message: 'Indica una url para el logo.', 
+  }))
 })
 
 const createLanguageSchema = LanguageSchema.omit({
@@ -43,13 +44,20 @@ const createLanguageSchema = LanguageSchema.omit({
 })
 
 export async function deleteLanguage(id: string) {
-  return 
+  try{
+    await deleteLanguageService(id)
+  }
+  catch (error){
+    return {
+      message: 'Error de datos: Error eliminando registro'
+    }
+  }
+
+  revalidatePath('/dashboard/languages')
 }
 
 
-export async function createLanguage(prevState: State, formData: FormData) {
-
-  console.log(formData)
+export async function createLanguage(prevState: LanguageState, formData: FormData) {
 
   const validatedFields = createLanguageSchema.safeParse({
     name: formData.get('name'), 
@@ -58,8 +66,6 @@ export async function createLanguage(prevState: State, formData: FormData) {
     experience_years: formData.get('years'),
     image_url: formData.get('image_url'), 
   })
-
-  console.log(formData.get('name'))
   
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
@@ -83,7 +89,7 @@ export async function createLanguage(prevState: State, formData: FormData) {
   }
   catch (error){
     return {
-      message: 'Database Error: Failed to Create Invoice'
+      message: 'Error de datos: Fallo al insertar registro'
     }
   }
 
@@ -91,3 +97,43 @@ export async function createLanguage(prevState: State, formData: FormData) {
   redirect('/dashboard/languages')
 }
 
+export async function updateLanguage(id: string, prevState: LanguageState, formData: FormData) {
+
+  const validatedFields = createLanguageSchema.safeParse({
+    name: formData.get('name'), 
+    experience_level: formData.get('level'),
+    experience_type: formData.get('type'),
+    experience_years: formData.get('years'),
+    image_url: formData.get('image_url'), 
+  })
+  
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    console.log(validatedFields.error.flatten().fieldErrors)
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Imposible actualizar lenguaje',
+    };
+  }
+
+  // Prepare data for insertion into the database
+  const { name, 
+          experience_level, 
+          experience_type, 
+          experience_years, 
+          image_url 
+  } = validatedFields.data;
+  
+  try{
+    await updateLanguageService({id, name, level: experience_level, type: experience_type, years: experience_years, image_url})
+  }
+  catch (error){
+    return {
+      message: 'Error de datos: Fallo al actualizar registro'
+    }
+  }
+
+  revalidatePath('/dashboard/languages')
+  revalidatePath(`/dashboard/languages/${id}/edit`)
+  redirect('/dashboard/languages')
+}
