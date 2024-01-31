@@ -1,10 +1,12 @@
-import { getLanguagesTotalPages } from "@/app/lib/data";
+import { fetchLanguagesPages } from "@/app/lib/data";
 import { secondaryFont } from "@/app/ui/fonts"
 import { CreateLanguage } from "@/app/ui/languages/buttons";
 import TableLanguage from "@/app/ui/languages/table-language";
 import Pagination from "@/app/ui/pagination";
 import Search from "@/app/ui/search";
+import { LanguagesTableSkeleton } from "@/app/ui/skeletons";
 import { clsx } from 'clsx';
+import { Suspense } from "react";
 export default async function Page (
   { searchParams } :
   { searchParams : {
@@ -16,7 +18,8 @@ export default async function Page (
 
   const query = searchParams?.query || ''
   const currentPage = Number(searchParams?.page) || 1
-  const totalPages = await getLanguagesTotalPages(query)
+
+  const totalPages = await fetchLanguagesPages(query)
 
   return (
     <div className="w-full">
@@ -27,9 +30,9 @@ export default async function Page (
       <Search placeholder="filtrar datos ..." />
       <CreateLanguage /> 
     </div>
-     {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}> */}
+     <Suspense key={query + currentPage} fallback={<LanguagesTableSkeleton />}>
       <TableLanguage query={query} currentPage={currentPage}/>
-    {/* </Suspense> */}
+    </Suspense>
     <div className="mt-5 flex w-full justify-center">
       <Pagination totalPages={totalPages} />
     </div>

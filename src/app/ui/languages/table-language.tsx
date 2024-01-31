@@ -1,4 +1,4 @@
-import { fetchLanguages } from "@/app/lib/data";
+import { fetchFilteredLanguages } from "@/app/lib/data";
 import Image from 'next/image';
 import { UpdateLanguage, DeleteLanguage } from "./buttons";
 
@@ -9,8 +9,7 @@ export default async function TableLanguage ({currentPage, query} : {
 }) {
 
 
-  const languages = await fetchLanguages(currentPage, query);
-
+  const languages = await fetchFilteredLanguages(query, currentPage);  
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -29,19 +28,19 @@ export default async function TableLanguage ({currentPage, query} : {
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
-                        alt={`${language.nombre}'s profile picture`}
+                        alt={`${language.name}'s profile picture`}
                       />
-                      <p>{language.nombre}</p>
+                      <p>{language.name}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {language.nivel}
+                      {language.experience_level}
                     </p>
-                    <p>{language.años}</p>
-                    <p>{language.experiencia}</p>
+                    <p>{language.experience_years}</p>
+                    <p>{language.experience_type}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateLanguage id={language.id} />
@@ -84,19 +83,19 @@ export default async function TableLanguage ({currentPage, query} : {
                         className="rounded-md p-1 "
                         width={50}
                         height={50}
-                        alt={`${language.nombre}'s profile picture`}
+                        alt={`${language.name}'s profile picture`}
                       />
-                      <p>{language.nombre}</p>
+                      <p>{language.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {language.nivel}
+                    {language.experience_level}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {language.años}
+                    {language.experience_years}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {language.experiencia}
+                    {language.experience_type}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
