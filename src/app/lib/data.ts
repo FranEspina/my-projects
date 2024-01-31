@@ -1,5 +1,7 @@
 import { LanguagesTable } from "./definitions";
 import { sql } from '@vercel/postgres'
+import { v4 as uuidv4 } from 'uuid'
+
 
 const ITEMS_PER_PAGE = 6
 
@@ -12,7 +14,7 @@ export async function fetchFilteredLanguages(
   try {
 
     //Mock para probar los skeletons
-    //await new Promise(resolve => setTimeout(resolve, 1000));
+    //await new Promise(resolve => setTimeout(resolve, 3000));
 
     const languages = await sql<LanguagesTable>`
       SELECT
@@ -59,5 +61,28 @@ export async function fetchLanguagesPages (query: string) : Promise<number> {
   }
 }
 
+export async function createLanguage({name, level, type, years, image_url}
+  : {
+    name: string, 
+    level: string, 
+    type: string, 
+    years: number, 
+    image_url: string
+    }
+  ){
 
+  
+  const id = uuidv4()
+
+  try {
+    await sql`
+    INSERT INTO languages (id, name, experience_level, experience_type, experience_years, image_url)
+    VALUES(${id}, ${name}, ${level}, ${type}, ${years}, ${image_url})
+    `
+    
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Error creando lenguaje de programación.');
+  }
+}
 
