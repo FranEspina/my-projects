@@ -1,10 +1,6 @@
+const { list_lenguages } = require('../src/app/mocks/languages.js')
 const { db } = require('@vercel/postgres');
-// const {
-//   invoices,
-//   customers,
-//   revenue,
-//   users,
-// } = require('../app/lib/placeholder-data.js');
+const { v4: uuidv4 } = require('uuid');
 //const bcrypt = require('bcrypt');
 
 // async function seedUsers(client) {
@@ -164,6 +160,8 @@ async function seedLanguages(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
+    await client.sql`DROP TABLE IF EXISTS languages`;
+
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS languages (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -177,22 +175,22 @@ async function seedLanguages(client) {
 
     console.log(`Created "languages" table`);
 
-    // // Insert data into the "customers" table
-    // const insertedCustomers = await Promise.all(
-    //   customers.map(
-    //     (customer) => client.sql`
-    //     INSERT INTO customers (id, name, email, image_url)
-    //     VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
-    //     ON CONFLICT (id) DO NOTHING;
-    //   `,
-    //   ),
-    // );
+    // Insert data into the "languages" table
+    const insertedLanguages = await Promise.all(
+      list_lenguages.map(
+        (lang) => client.sql`
+        INSERT INTO languages (id, name, experience_type, experience_level, experience_years, image_url)
+        VALUES (${uuidv4()}, ${lang.nombre}, ${lang.experiencia}, ${lang.nivel}, ${lang.años}, ${lang.image_url})
+        ON CONFLICT (id) DO NOTHING;
+      `,
+      ),
+    );
 
-    // console.log(`Seeded ${insertedCustomers.length} customers`);
+    console.log(`Seeded ${insertedLanguages.length} languages`);
 
     return {
       createTable,
-      //customers: insertedCustomers,
+      languages: insertedLanguages,
     };
   } catch (error) {
     console.error('Error seeding languages:', error);
