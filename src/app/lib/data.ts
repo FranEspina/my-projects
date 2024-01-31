@@ -12,7 +12,7 @@ export async function fetchFilteredLanguages(
   try {
 
     //Mock para probar los skeletons
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    //await new Promise(resolve => setTimeout(resolve, 1000));
 
     const languages = await sql<LanguagesTable>`
       SELECT
@@ -24,10 +24,10 @@ export async function fetchFilteredLanguages(
         image_url
       FROM languages
       WHERE
-        name ILIKE ${`%${query}%`} OR
-        experience_level ILIKE ${`%${query}%`} OR
-        experience_type::text ILIKE ${`%${query}%`} OR
-        experience_years::text ILIKE ${`%${query}%`}
+        unaccent(name) ILIKE unaccent(${`%${query}%`}) OR
+        unaccent(experience_level) ILIKE unaccent(${`%${query}%`}) OR
+        unaccent(experience_type::text) ILIKE unaccent(${`%${query}%`}) OR
+        unaccent(experience_years::text) ILIKE unaccent(${`%${query}%`})
       ORDER BY name ASC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
@@ -45,10 +45,10 @@ export async function fetchLanguagesPages (query: string) : Promise<number> {
     const count = await sql`SELECT COUNT(*)
     FROM languages
     WHERE
-    name ILIKE ${`%${query}%`} OR
-    experience_level ILIKE ${`%${query}%`} OR
-    experience_type::text ILIKE ${`%${query}%`} OR
-    experience_years::text ILIKE ${`%${query}%`}
+      unaccent(name) ILIKE unaccent(${`%${query}%`}) OR
+      unaccent(experience_level) ILIKE unaccent(${`%${query}%`}) OR
+      unaccent(experience_type::text) ILIKE unaccent(${`%${query}%`}) OR
+      unaccent(experience_years::text) ILIKE unaccent(${`%${query}%`})
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);

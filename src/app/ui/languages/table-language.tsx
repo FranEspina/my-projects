@@ -20,27 +20,25 @@ export default async function TableLanguage ({currentPage, query} : {
                 key={language.id}
                 className="mb-2 w-full rounded-md bg-slate-800 p-4"
               >
-                <div className="flex items-center justify-between border-b pb-4">
+                <div className="flex items-center justify-between border-b border-slate-600 pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
                         src={language.image_url}
-                        className="mr-2 rounded-full"
+                        className="mr-2 rounded-md"
                         width={28}
                         height={28}
                         alt={`${language.name}'s profile picture`}
                       />
-                      <p>{language.name}</p>
+                      <p className="text-xl font-medium">{language.name}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">
-                      {language.experience_level}
-                    </p>
-                    <p>{language.experience_years}</p>
-                    <p>{language.experience_type}</p>
+                    <p className="text-sm">{language.experience_level}</p>
+                    <p className="text-sm">{language.experience_type}</p>
+                    <p className="text-xl font-medium mt-2">+{language.experience_years}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateLanguage id={language.id} />

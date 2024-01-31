@@ -159,6 +159,7 @@ const { v4: uuidv4 } = require('uuid');
 async function seedLanguages(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "unaccent"`;
 
     await client.sql`DROP TABLE IF EXISTS languages`;
 
